@@ -1,44 +1,168 @@
+import { useEffect, useState } from "react";
+import { getCart, removeCartItem, updateCartQuantity } from "../api/cartApi";
 import { Link } from "react-router-dom";
 
 function Cart() {
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  return (
+  useEffect(() => {
+    loadCart();
+  }, []);
 
-    <div className="min-h-screen bg-gray-50 py-16 px-10">
+  const loadCart = async () => {
+    try {
+      const data = await getCart();
+      setCartItems(data || []);
+    } catch (error) {
+      console.error("Failed to load cart", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-xl p-10 text-center">
+  // Increase Quantity
+  const increaseQty = async (item) => {
+    console.log("Increase clicked", item);
 
-        <h1 className="text-3xl font-bold text-green-700">
-          Your Cart
-        </h1>
+    const newQty = item.quantity + 1;
 
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
-          alt="empty cart"
-          className="w-40 mx-auto mt-8 opacity-80"
-        />
+    await updateCartQuantity(item.id, newQty);
 
-        <p className="text-gray-600 mt-6 text-lg">
-          Your cart is currently empty.
-        </p>
+    setCartItems((prev) =>
+      prev.map((p) => (p.id === item.id ? { ...p, quantity: newQty } : p)),
+    );
+  };
 
-        <p className="text-gray-500 mt-2">
-          Looks like you haven't added any chutneys yet.
-        </p>
+  // Decrease Quantity
+  const decreaseQty = async (item) => {
+    if (item.quantity <= 1) return;
 
-        <Link
-          to="/products"
-          className="inline-block mt-8 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition"
-        >
-          Explore Products
-        </Link>
+    const newQty = item.quantity - 1;
 
-      </div>
+    try {
+      await updateCartQuantity(item.id, newQty);
 
-    </div>
+      setCartItems((prev) =>
+        prev.map((p) => (p.id === item.id ? { ...p, quantity: newQty } : p)),
+      );
+    } catch (error) {
+      console.error("Failed to update quantity");
+    }
+  };
 
+  // Remove item
+  const removeItem = async (id) => {
+    try {
+      await removeCartItem(id);
+
+      setCartItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Failed to remove item");
+    }
+  };
+
+  // Cart Total
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
   );
 
+  // Loading UI
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <p className="text-lg">Loading cart...</p>
+      </div>
+    );
+  }
+
+  // Empty Cart UI
+  if (cartItems.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+          className="w-40 mb-6"
+        />
+
+        <h2 className="text-2xl font-semibold">Your cart is empty</h2>
+
+        <p className="text-gray-500 mt-2">
+          Add some delicious chutneys to your cart
+        </p>
+
+        <a
+          href="/products"
+          className="mt-5 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+        >
+          Continue Shopping
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-5xl mx-auto p-10">
+      <h1 className="text-3xl font-bold mb-8">My Cart</h1>
+
+      {cartItems.map((item) => (
+        <div
+          key={item.id}
+          className="flex items-center justify-between bg-white shadow-md rounded-xl p-5 mb-5"
+        >
+          <div className="flex items-center gap-5">
+            <img src={item.image} className="w-20 h-20 object-cover rounded" />
+
+            <div>
+              <h2 className="font-semibold text-lg">{item.name}</h2>
+
+              <p className="text-green-700 font-bold">₹{item.price}</p>
+
+              <p className="text-gray-500">
+                Subtotal ₹{item.price * item.quantity}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              disabled={item.quantity <= 1}
+              onClick={() => decreaseQty(item)}
+              className="bg-gray-200 px-3 py-1 rounded disabled:opacity-40"
+            >
+              -
+            </button>
+
+            <span className="font-semibold">{item.quantity}</span>
+
+            <button
+              onClick={() => increaseQty(item)}
+              className="bg-green-600 text-white px-3 py-1 rounded"
+            >
+              +
+            </button>
+
+            <button
+              onClick={() => removeItem(item.id)}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <div className="text-right mt-10 text-2xl font-bold">Total ₹{total}</div>
+      <Link
+        to="/checkout"
+        state={{ cartItems, total }}
+        className="bg-green-600 text-white px-6 py-3 rounded mt-4 inline-block"
+      >
+        Checkout
+      </Link>
+    </div>
+  );
 }
 
 export default Cart;

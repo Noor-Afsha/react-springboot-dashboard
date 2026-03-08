@@ -1,22 +1,38 @@
 import { Link } from "react-router-dom";
-
+import logo from "../assets/chutney logo.png";
 function Navbar() {
   return (
-    <div className="bg-green-700 text-white px-10 py-4 flex justify-between items-center">
+    <nav className="bg-green-700 text-white shadow-lg">
+      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src={logo}
+            alt="Ghar Ki Chutney Logo"
+            className="w-10 h-10 object-contain"
+          />
 
-      <div className=" flex gap-8 text-lg">
+          <span className="text-xl font-bold text-white">Ghar Ki Chutney</span>
+        </Link>
 
-        <Link to="/" className="hover:text-orange-300">Home</Link>
+        <div className="flex gap-6 font-medium">
+          <Link to="/" className="hover:text-yellow-300 transition">
+            Home
+          </Link>
 
-        <Link to="/products" className="hover:text-orange-300">Products</Link>
+          <Link to="/products" className="hover:text-yellow-300 transition">
+            Products
+          </Link>
 
-        <Link to="/cart" className="hover:text-orange-300">Cart</Link>
-        <Link to="/about" className="hover:text-orange-300">About</Link>
+          <Link to="/cart" className="hover:text-yellow-300 transition">
+            Cart
+          </Link>
 
-
+          <Link to="/about" className="hover:text-yellow-300 transition">
+            About
+          </Link>
+        </div>
       </div>
-
-    </div>
+    </nav>
   );
 }
 

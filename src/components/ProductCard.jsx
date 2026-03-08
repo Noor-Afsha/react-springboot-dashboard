@@ -1,4 +1,23 @@
+import { addToCart } from "../api/cartApi";
+import { toast } from "react-toastify";
+
 function ProductCard({ product }) {
+
+  const handleAddToCart = async () => {
+
+    try {
+
+      await addToCart(product.id, 1);
+
+    toast.success("Item added to cart");
+
+    } catch (error) {
+
+    toast.error("Failed to add item");
+
+    }
+
+  };
 
   return (
 
@@ -19,7 +38,10 @@ function ProductCard({ product }) {
           ₹{product.price}
         </p>
 
-        <button className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
+        <button
+          onClick={handleAddToCart}
+          className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+        >
           Add to Cart
         </button>
 
