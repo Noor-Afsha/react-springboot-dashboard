@@ -5,22 +5,19 @@ import { ShoppingCart } from "lucide-react";
 function Footer() {
   return (
     <footer className="bg-gray-900 text-white">
-
       <div className="max-w-7xl mx-auto px-10 py-12 grid md:grid-cols-4 gap-10">
-
         <div>
           <h2 className="text-xl font-bold mb-4">Chutney Store</h2>
           <p className="text-gray-400">
-            Authentic homemade Indian chutneys prepared fresh using traditional recipes.
+            Authentic homemade Indian chutneys prepared fresh using traditional
+            recipes.
           </p>
         </div>
 
         <div>
-
           <h3 className="font-semibold mb-4">Quick Links</h3>
 
           <ul className="space-y-2 text-gray-400">
-
             <li>
               <Link to="/" className="hover:text-white transition">
                 Home
@@ -44,9 +41,7 @@ function Footer() {
                 About
               </Link>
             </li>
-
           </ul>
-
         </div>
 
         <div>
@@ -59,41 +54,39 @@ function Footer() {
         </div>
 
         <div>
-  <h3 className="font-semibold mb-4">Contact</h3>
+          <h3 className="font-semibold mb-4">Contact</h3>
 
-  <p className="text-gray-400">Lucknow, India</p>
-  <p className="text-gray-400">support@chutney.com</p>
+          <p className="text-gray-400">Lucknow, India</p>
+          <p className="text-gray-400">support@chutney.com</p>
 
-  {/* Social Media Icons */}
+          {/* Social Media Icons */}
 
-  <div className="flex gap-4 mt-4">
+          <div className="flex gap-4 mt-4">
+            <a href="#" className="hover:text-green-400">
+              <Facebook size={20} />
+            </a>
 
-    <a href="#" className="hover:text-green-400">
-      <Facebook size={20} />
-    </a>
+            <a href="#" className="hover:text-green-400">
+              <Instagram size={20} />
+            </a>
 
-    <a href="#" className="hover:text-green-400">
-      <Instagram size={20} />
-    </a>
+            <a href="#" className="hover:text-green-400">
+              <Twitter size={20} />
+            </a>
 
-    <a href="#" className="hover:text-green-400">
-      <Twitter size={20} />
-    </a>
-
-    <a href="mailto:support@chutney.com" className="hover:text-green-400">
-      <Mail size={20} />
-    </a>
-
-  </div>
-
-</div>
-
+            <a
+              href="mailto:support@chutney.com"
+              className="hover:text-green-400"
+            >
+              <Mail size={20} />
+            </a>
+          </div>
+        </div>
       </div>
 
       <div className="border-t border-gray-700 text-center py-4 text-gray-400">
         © 2026 Chutney Store
       </div>
-
     </footer>
   );
 }

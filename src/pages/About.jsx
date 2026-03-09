@@ -6,13 +6,13 @@ function About() {
       {/* HERO SECTION */}
 
       <div className="bg-gradient-to-r from-green-700 to-green-500 text-white py-24 px-10 text-center">
-        <h1 className="text-5xl font-bold">The Story of Ghar Ki Chutney</h1>
+        <h1 className="text-5xl font-bold">The Story of Ghar Ka Zaika</h1>
 
         <p className="mt-6 max-w-3xl mx-auto text-lg">
-          At Ghar Ki Chutney, we bring the authentic taste of traditional
-          homemade chutneys and pickles prepared using age-old methods. Every
-          jar is crafted with love, patience, and the same recipes our
-          grandmothers used in their kitchens.
+          At Ghar Ka Zaika, we bring the authentic taste of traditional homemade
+          chutneys and pickles prepared using age-old methods. Every jar is
+          crafted with love, patience, and the same recipes our grandmothers
+          used in their kitchens.
         </p>
       </div>
       {/* TRADITIONAL PROCESS */}

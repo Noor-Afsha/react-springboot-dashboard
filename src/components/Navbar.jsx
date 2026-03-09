@@ -11,7 +11,7 @@ function Navbar() {
             className="w-10 h-10 object-contain"
           />
 
-          <span className="text-xl font-bold text-white">Ghar Ki Chutney</span>
+          <span className="text-xl font-bold text-white">Ghar Ka Zaika</span>
         </Link>
 
         <div className="flex gap-6 font-medium">
