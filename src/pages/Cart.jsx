@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { getCart, removeCartItem, updateCartQuantity } from "../api/cartApi";
 import { Link } from "react-router-dom";
 
-function Cart() {
-  const [cartItems, setCartItems] = useState([]);
+function Cart({ cartItems, setCartItems }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,15 +22,17 @@ function Cart() {
 
   // Increase Quantity
   const increaseQty = async (item) => {
-    console.log("Increase clicked", item);
-
     const newQty = item.quantity + 1;
 
-    await updateCartQuantity(item.id, newQty);
+    try {
+      await updateCartQuantity(item.id, newQty);
 
-    setCartItems((prev) =>
-      prev.map((p) => (p.id === item.id ? { ...p, quantity: newQty } : p)),
-    );
+      setCartItems((prev) =>
+        prev.map((p) => (p.id === item.id ? { ...p, quantity: newQty } : p)),
+      );
+    } catch (error) {
+      console.error("Failed to increase quantity");
+    }
   };
 
   // Decrease Quantity
@@ -47,7 +48,7 @@ function Cart() {
         prev.map((p) => (p.id === item.id ? { ...p, quantity: newQty } : p)),
       );
     } catch (error) {
-      console.error("Failed to update quantity");
+      console.error("Failed to decrease quantity");
     }
   };
 
@@ -154,6 +155,7 @@ function Cart() {
       ))}
 
       <div className="text-right mt-10 text-2xl font-bold">Total ₹{total}</div>
+
       <Link
         to="/checkout"
         state={{ cartItems, total }}

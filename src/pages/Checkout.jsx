@@ -3,7 +3,7 @@ import { placeOrder } from "../api/orderApi";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
 
-function Checkout() {
+function Checkout({ setCartItems }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,9 +63,12 @@ function Checkout() {
 
       toast.success("Order placed successfully");
 
+      // ✅ CLEAR CART AFTER ORDER
+      setCartItems([]);
+
       navigate("/order-success", {
         state: {
-          order: response, // FIXED
+          order: response,
           cartItems: cartItems,
         },
       });
@@ -101,6 +104,7 @@ function Checkout() {
 
           <div className="border-t mt-3 pt-3 font-semibold flex justify-between">
             <span>Total</span>
+
             <span>₹{cartTotal}</span>
           </div>
         </div>
@@ -139,6 +143,7 @@ function Checkout() {
             onChange={handleChange}
             className="w-full border p-3 rounded"
           />
+
           <input
             type="email"
             name="email"
@@ -147,6 +152,7 @@ function Checkout() {
             onChange={handleChange}
             className="w-full border p-3 rounded"
           />
+
           <textarea
             name="address"
             placeholder="Full Address"
