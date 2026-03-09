@@ -4,7 +4,6 @@ function About() {
   return (
     <div>
       {/* HERO SECTION */}
-
       <div className="bg-gradient-to-r from-green-700 to-green-500 text-white py-24 px-10 text-center">
         <h1 className="text-5xl font-bold">The Story of Ghar Ka Zaika</h1>
 
@@ -15,6 +14,7 @@ function About() {
           used in their kitchens.
         </p>
       </div>
+
       {/* TRADITIONAL PROCESS */}
 
       <div className="px-10 py-20 flex flex-col md:flex-row items-center gap-16">
@@ -29,19 +29,23 @@ function About() {
           </h2>
 
           <p className="mt-6 text-gray-700 leading-relaxed">
-            Unlike factory-made chutneys, our chutneys are prepared using
-            traditional stone grinders (sil batta). This slow grinding process
-            preserves the natural oils, flavors, and aroma of the ingredients,
-            giving the chutney a rich and authentic taste that modern machines
-            simply cannot replicate.
+            "Unlike factory-made chutneys, each of our chutneys is lovingly
+            prepared on a traditional stone grinder, or sil-batta, just like
+            generations before us. This slow, careful grinding preserves every
+            drop of natural oil, every burst of flavor, and the unforgettable
+            aroma of fresh ingredients. The result? A rich, authentic taste that
+            modern machines could never match—bringing the warmth of homemade
+            goodness straight to your table."
           </p>
 
           <p className="mt-4 text-gray-700">
-            Each batch is made fresh after receiving your order to ensure the
-            highest quality and freshness.
+            "Every batch is lovingly prepared fresh, just for you, the moment
+            you place your order—so you can savor the warmth, flavor, and care
+            in every bite."
           </p>
         </div>
       </div>
+
       {/* INGREDIENTS */}
 
       <div className="bg-green-50 py-20 px-10 text-center">
