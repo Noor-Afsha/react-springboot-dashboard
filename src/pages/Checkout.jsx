@@ -22,6 +22,9 @@ function Checkout({ setCartItems }) {
 
   const [loading, setLoading] = useState(false);
 
+  // ⭐ prevent duplicate order creation
+  const [paymentProcessing, setPaymentProcessing] = useState(false);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -31,6 +34,8 @@ function Checkout({ setCartItems }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (paymentProcessing) return; // ⭐ prevent double click
 
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
@@ -43,6 +48,7 @@ function Checkout({ setCartItems }) {
     }
 
     setLoading(true);
+    setPaymentProcessing(true); // ⭐ mark processing
 
     const orderData = {
       name: form.name,
@@ -61,21 +67,83 @@ function Checkout({ setCartItems }) {
     try {
       const response = await placeOrder(orderData);
 
-      toast.success("Order placed successfully");
+      const order = response.data || response;
 
-      // ✅ CLEAR CART AFTER ORDER
-      setCartItems([]);
+      const options = {
+        key: "rzp_test_SPOsLb7kUfEbJd", // razor pay key
+        amount: order.totalAmount * 100,
+        currency: "INR",
+        name: "Ghar Ka Zaika",
+        description: "Chutney Order Payment",
+        order_id: order.razorpayOrderId,
 
-      navigate("/order-success", {
-        state: {
-          order: response,
-          cartItems: cartItems,
+        handler: async function (paymentResponse) {
+          try {
+            await fetch(
+              "https://chutney-backend-service-5.onrender.com/api/orders/verify",
+              // "http://localhost:8080/api/orders/verify",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(paymentResponse),
+              },
+            );
+
+            toast.success("Payment Successful 🎉");
+
+            setCartItems([]);
+
+            navigate("/order-success", {
+              state: {
+                order: order,
+                cartItems: cartItems,
+              },
+            });
+          } catch (error) {
+            toast.error("Payment verification failed");
+          }
         },
+
+        prefill: {
+          name: form.name,
+          email: form.email,
+          contact: form.phone,
+        },
+
+        theme: {
+          color: "#16a34a",
+        },
+
+        modal: {
+          ondismiss: function () {
+            // ⭐ user closed payment popup
+            toast.error("Payment cancelled");
+            setPaymentProcessing(false);
+            setLoading(false);
+          },
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+
+      // ⭐ Payment Failure Handler
+      rzp.on("payment.failed", function (response) {
+        console.error(response.error);
+
+        toast.error("Payment failed: " + response.error.description);
+
+        setPaymentProcessing(false);
+        setLoading(false);
       });
+
+      rzp.open();
     } catch (error) {
       console.error(error);
       toast.error("Failed to place order");
-    } finally {
+
+      setPaymentProcessing(false);
       setLoading(false);
     }
   };
@@ -87,8 +155,6 @@ function Checkout({ setCartItems }) {
           Checkout
         </h1>
 
-        {/* Order Summary */}
-
         <div className="mb-8 bg-gray-50 p-4 rounded-lg">
           <h2 className="font-semibold mb-3">Order Summary</h2>
 
@@ -97,19 +163,15 @@ function Checkout({ setCartItems }) {
               <span>
                 {item.name} × {item.quantity}
               </span>
-
               <span>₹{item.price * item.quantity}</span>
             </div>
           ))}
 
           <div className="border-t mt-3 pt-3 font-semibold flex justify-between">
             <span>Total</span>
-
             <span>₹{cartTotal}</span>
           </div>
         </div>
-
-        {/* Checkout Form */}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
@@ -186,10 +248,10 @@ function Checkout({ setCartItems }) {
           </div>
 
           <button
-            disabled={loading}
+            disabled={loading || paymentProcessing}
             className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold"
           >
-            {loading ? "Placing Order..." : "Place Order"}
+            {loading ? "Processing Payment..." : "Pay & Place Order"}
           </button>
         </form>
       </div>

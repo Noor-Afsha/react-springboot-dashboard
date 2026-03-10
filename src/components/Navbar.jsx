@@ -6,10 +6,10 @@ function Navbar({ cartItems }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // SAFE cart count
-const cartCount = Array.isArray(cartItems)
-  ? cartItems.reduce((total, item) => total + item.quantity, 0)
-  : 0;
-    return (
+  const cartCount = Array.isArray(cartItems)
+    ? cartItems.reduce((total, item) => total + item.quantity, 0)
+    : 0;
+  return (
     <nav className="bg-green-700 text-white shadow-lg fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
         {/* Logo */}
@@ -37,17 +37,24 @@ const cartCount = Array.isArray(cartItems)
             menuOpen ? "top-16" : "-top-96"
           }`}
         >
-          <Link to="/" className="hover:text-yellow-300 transition">
+          <Link
+            to="/"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-yellow-300 transition"
+          >
             Home
           </Link>
-
-          <Link to="/products" className="hover:text-yellow-300 transition">
+          <Link
+            to="/products"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-yellow-300 transition"
+          >
             Products
           </Link>
-
           {/* Cart */}
           <Link
             to="/cart"
+            onClick={() => setMenuOpen(false)}
             className="relative hover:text-yellow-300 transition"
           >
             Cart
@@ -58,7 +65,11 @@ const cartCount = Array.isArray(cartItems)
             )}
           </Link>
 
-          <Link to="/about" className="hover:text-yellow-300 transition">
+          <Link
+            to="/about"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-yellow-300 transition"
+          >
             About
           </Link>
         </div>
