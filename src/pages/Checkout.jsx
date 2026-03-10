@@ -70,7 +70,7 @@ function Checkout({ setCartItems }) {
       const order = response.data || response;
 
       const options = {
-        key: "rzp_test_SPOsLb7kUfEbJd", // razor pay key
+        key: "rzp_test_SPT7KXU2VmvgIA", // razor pay key
         amount: order.totalAmount * 100,
         currency: "INR",
         name: "Ghar Ka Zaika",
@@ -80,8 +80,8 @@ function Checkout({ setCartItems }) {
         handler: async function (paymentResponse) {
           try {
             await fetch(
-              "https://chutney-backend-service-5.onrender.com/api/orders/verify",
-              // "http://localhost:8080/api/orders/verify",
+              // "https://chutney-backend-service-5.onrender.com/api/orders/verify",
+              "http://localhost:8080/api/orders/verify",
               {
                 method: "POST",
                 headers: {
