@@ -80,8 +80,8 @@ function Checkout({ setCartItems }) {
         handler: async function (paymentResponse) {
           try {
             await fetch(
-              // "https://chutney-backend-service-5.onrender.com/api/orders/verify",
-              "http://localhost:8080/api/orders/verify",
+              "https://chutney-backend-service-5.onrender.com/api/orders/verify", //for deployment
+              // "http://localhost:8080/api/orders/verify",  //for testing
               {
                 method: "POST",
                 headers: {
