@@ -72,6 +72,13 @@ function Navbar({ cartItems }) {
           >
             About
           </Link>
+           <Link
+            to="/my-orders"
+            onClick={() => setMenuOpen(false)}
+            className="hover:text-yellow-300 transition"
+          >
+            My Orders
+          </Link>
         </div>
       </div>
     </nav>

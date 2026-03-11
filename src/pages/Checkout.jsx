@@ -80,8 +80,8 @@ function Checkout({ setCartItems }) {
         handler: async function (paymentResponse) {
           try {
             await fetch(
-              "https://chutney-backend-service-5.onrender.com/api/orders/verify", //for deployment
-              // "http://localhost:8080/api/orders/verify",  //for testing
+              // "https://chutney-backend-service-5.onrender.com/api/orders/verify", //for deployment
+              "http://localhost:8080/api/orders/verify", //for testing
               {
                 method: "POST",
                 headers: {
@@ -92,6 +92,9 @@ function Checkout({ setCartItems }) {
             );
 
             toast.success("Payment Successful 🎉");
+
+            // ⭐ store phone for order history
+            localStorage.setItem("userPhone", form.phone);
 
             setCartItems([]);
 

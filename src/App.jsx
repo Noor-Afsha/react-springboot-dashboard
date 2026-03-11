@@ -10,6 +10,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
+import MyOrders from "./pages/MyOrders";
+// import AdminOrders from "./pages/AdminOrders";
 
 function App() {
   const [cartItems, setCartItems] = useState([]);
@@ -34,11 +36,13 @@ function App() {
               }
             />
             <Route path="/about" element={<About />} />
+            <Route path="/my-orders" element={<MyOrders />} />
             <Route
               path="/checkout"
               element={<Checkout setCartItems={setCartItems} />}
             />{" "}
             <Route path="/order-success" element={<OrderSuccess />} />
+            {/* <Route path="/admin-orders" element={<AdminOrders />} /> */}
           </Routes>
         </div>
         <Footer />
