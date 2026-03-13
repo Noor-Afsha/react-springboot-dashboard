@@ -27,7 +27,7 @@ function Home() {
 
               <Link
                 to="/about"
-                className="border border-white px-8 py-3 rounded-lg hover:bg-white hover:text-green-700 transition"
+                className="bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:scale-105 transition"
               >
                 Learn More
               </Link>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/api";
 
 function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -9,9 +9,10 @@ function MyOrders() {
   useEffect(() => {
     if (!phone) return;
 
-    axios
-      .get(`/orders/orders/${phone}`)
+    api
+      .get(`/orders/${phone}`)
       .then((res) => {
+        console.log(res.data);
         setOrders(res.data);
       })
       .catch((err) => {
