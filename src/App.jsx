@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Checkout from "./pages/Checkout";
 import OrderSuccess from "./pages/OrderSuccess";
 import MyOrders from "./pages/MyOrders";
+import AdminOrders from "./pages/AdminOrders";
+
 // import AdminOrders from "./pages/AdminOrders";
 
 function App() {
@@ -42,7 +44,7 @@ function App() {
               element={<Checkout setCartItems={setCartItems} />}
             />{" "}
             <Route path="/order-success" element={<OrderSuccess />} />
-            {/* <Route path="/admin-orders" element={<AdminOrders />} /> */}
+          <Route path="/admin-orders" element={<AdminOrders />} />
           </Routes>
         </div>
         <Footer />
