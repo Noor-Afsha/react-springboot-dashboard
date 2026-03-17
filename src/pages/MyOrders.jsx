@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../api/api";
+import OrderTracker from "../components/OrderTracker";
+import DeliveryMap from "../components/DeliveryMap";
 
-const steps = [
-  "PLACED",
-  "CONFIRMED",
-  "SHIPPED",
-  "OUT_FOR_DELIVERY",
-  "DELIVERED",
-];
-
-function MyOrders() {
+export default function MyOrders() {
   const [orders, setOrders] = useState([]);
+  const [openOrderId, setOpenOrderId] = useState(null);
+  const [trackOrderId, setTrackOrderId] = useState(null);
 
   const phone = localStorage.getItem("userPhone");
 
@@ -20,105 +16,127 @@ function MyOrders() {
     api
       .get(`/orders/${phone}`)
       .then((res) => {
-        setOrders(res.data);
+        console.log("Orders API Response:", res.data);
+
+        setOrders(res.data); // IMPORTANT FIX
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Order fetch error:", err);
       });
   }, [phone]);
 
-  const getStepIndex = (status) => {
-    return steps.indexOf(status);
+  const toggleOrder = (id) => {
+    setOpenOrderId(openOrderId === id ? null : id);
+  };
+
+  const cancelOrder = async (orderId) => {
+    try {
+      await api.put(`/orders/${orderId}/cancel`);
+
+      setOrders((prev) =>
+        prev.map((o) => (o.id === orderId ? { ...o, status: "CANCELLED" } : o)),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-orange-50 py-16">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-green-700 text-center mb-10">
-          My Orders
-        </h1>
+    <div className="min-h-screen bg-gray-100 p-10">
+      <div className="max-w-5xl mx-auto">
+        <h1 className="text-3xl font-bold mb-10">🧾 My Orders</h1>
 
-        {!phone && (
-          <p className="text-center text-gray-600">
-            Please place an order first.
-          </p>
-        )}
-
-        {orders.length === 0 && phone && (
-          <p className="text-center text-gray-600">No Orders Found</p>
+        {orders.length === 0 && (
+          <p className="text-gray-500">No orders found</p>
         )}
 
         {orders.map((order) => {
-          const currentStep = getStepIndex(order.status);
+          const isOpen = openOrderId === order.id;
+          const isTracking = trackOrderId === order.id;
 
           return (
             <div
               key={order.id}
-              className="bg-white shadow-lg rounded-xl p-6 mb-8 border border-gray-100"
+              className="bg-white rounded-xl shadow mb-6 overflow-hidden"
             >
-              {/* ORDER HEADER */}
+              {/* BASIC INFO */}
 
-              <div className="flex justify-between items-center mb-4">
-                <div className="font-semibold text-gray-700">
-                  Order #{order.id}
+              <div
+                onClick={() => toggleOrder(order.id)}
+                className="cursor-pointer flex justify-between items-center p-6 hover:bg-gray-50"
+              >
+                <div>
+                  <p className="text-gray-400 text-sm">Order #{order.id}</p>
+
+                  <p className="font-semibold text-gray-800">{order.status}</p>
                 </div>
 
-                <span className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700 font-semibold">
-                  {order.status}
-                </span>
+                <div className="text-right">
+                  <p className="font-bold text-orange-600">
+                    ₹{order.totalAmount}
+                  </p>
+
+                  <p className="text-xs text-gray-400">
+                    Click to {isOpen ? "close" : "view"} details
+                  </p>
+                </div>
               </div>
 
-              {/* ORDER DETAILS */}
+              {/* DETAILS */}
 
-              <div className="space-y-1 text-gray-600 mb-6">
-                <p>
-                  <span className="font-semibold">Name:</span> {order.name}
-                </p>
+              {isOpen && (
+                <div className="p-6 border-t">
+                  <p className="text-gray-500 mb-6">📍 {order.address}</p>
 
-                <p>
-                  <span className="font-semibold">Address:</span>{" "}
-                  {order.address}
-                </p>
+                  <OrderTracker order={order} />
 
-                <p className="text-lg font-bold text-orange-600 mt-2">
-                  ₹{order.totalAmount}
-                </p>
-              </div>
+                  {/* BUTTONS */}
 
-              {/* ORDER TRACKING STEPS */}
-
-              <div className="flex items-center justify-between mt-6">
-                {steps.map((step, index) => {
-                  const active = index <= currentStep;
-
-                  return (
-                    <div
-                      key={step}
-                      className="flex-1 flex flex-col items-center"
+                  <div className="flex gap-4 mt-8">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        cancelOrder(order.id);
+                      }}
+                      className="bg-red-500 text-white px-5 py-2 rounded-lg"
                     >
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm ${
-                          active ? "bg-green-500" : "bg-gray-300"
-                        }`}
-                      >
-                        {index + 1}
-                      </div>
+                      Cancel Order
+                    </button>
 
-                      <p className="text-xs mt-2 text-center">
-                        {step.replaceAll("_", " ")}
-                      </p>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setTrackOrderId(isTracking ? null : order.id);
+                      }}
+                      className="bg-blue-500 text-white px-5 py-2 rounded-lg"
+                    >
+                      {isTracking ? "Hide Map" : "Track Order"}
+                    </button>
 
-                      {index !== steps.length - 1 && (
-                        <div
-                          className={`h-1 w-full ${
-                            index < currentStep ? "bg-green-500" : "bg-gray-300"
-                          }`}
-                        ></div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                    <button
+                      onClick={(e) => e.stopPropagation()}
+                      className="bg-gray-800 text-white px-5 py-2 rounded-lg"
+                    >
+                      Invoice
+                    </button>
+                  </div>
+
+                  {/* MAP */}
+
+                  {isTracking && (
+                    <DeliveryMap
+                      driverLocation={[
+                        order.driverLat || 26.8467,
+                        order.driverLng || 80.9462,
+                      ]}
+                      destination={[
+                        order.customerLat || 26.85,
+                        order.customerLng || 80.949,
+                      ]}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
@@ -126,5 +144,3 @@ function MyOrders() {
     </div>
   );
 }
-
-export default MyOrders;

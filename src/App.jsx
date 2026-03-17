@@ -44,7 +44,7 @@ function App() {
               element={<Checkout setCartItems={setCartItems} />}
             />{" "}
             <Route path="/order-success" element={<OrderSuccess />} />
-          <Route path="/admin-orders" element={<AdminOrders />} />
+            <Route path="/admin-orders" element={<AdminOrders />} />
           </Routes>
         </div>
         <Footer />
