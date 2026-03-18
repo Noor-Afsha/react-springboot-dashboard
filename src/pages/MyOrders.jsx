@@ -46,8 +46,8 @@ export default function MyOrders() {
 
       setOrders((prev) =>
         prev.map((o) =>
-          o.id === cancelOrderId ? { ...o, status: "CANCELLED" } : o
-        )
+          o.id === cancelOrderId ? { ...o, status: "CANCELLED" } : o,
+        ),
       );
 
       setCancelOrderId(null);
@@ -80,7 +80,10 @@ export default function MyOrders() {
           const isTracking = trackOrderId === order.id;
 
           return (
-            <div key={order.id} className="bg-white rounded-xl shadow mb-6 overflow-hidden">
+            <div
+              key={order.id}
+              className="bg-white rounded-xl shadow mb-6 overflow-hidden"
+            >
               <div
                 onClick={() => toggleOrder(order.id)}
                 className="cursor-pointer flex justify-between items-center p-6 hover:bg-gray-50"
@@ -114,7 +117,9 @@ export default function MyOrders() {
                         const diffHours = (now - orderTime) / (1000 * 60 * 60);
 
                         if (diffHours > 24) {
-                          setErrorMsg("Order can only be cancelled within 24 hours");
+                          setErrorMsg(
+                            "Order can only be cancelled within 24 hours",
+                          );
                           return;
                         }
 
@@ -169,7 +174,7 @@ export default function MyOrders() {
 
       {/* ✅ CANCEL POPUP */}
       {cancelOrderId && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-xl w-[400px]">
             <h2 className="text-xl font-bold mb-4">Cancel Order</h2>
 
@@ -201,7 +206,8 @@ export default function MyOrders() {
 
       {/* ✅ INVOICE POPUP */}
       {invoiceData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        // <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed inset-0 backdrop-blur-md bg-black/20 flex justify-center items-center z-50">
           <div className="bg-white w-[500px] p-6 rounded-xl shadow-lg relative">
             <button
               onClick={() => setInvoiceData(null)}
@@ -212,11 +218,21 @@ export default function MyOrders() {
 
             <h2 className="text-2xl font-bold mb-4">Invoice</h2>
 
-            <p><b>Order ID:</b> {invoiceData.id}</p>
-            <p><b>Name:</b> {invoiceData.name}</p>
-            <p><b>Status:</b> {invoiceData.status}</p>
-            <p><b>Total:</b> ₹{invoiceData.totalAmount}</p>
-            <p><b>Address:</b> {invoiceData.address}</p>
+            <p>
+              <b>Order ID:</b> {invoiceData.id}
+            </p>
+            <p>
+              <b>Name:</b> {invoiceData.name}
+            </p>
+            <p>
+              <b>Status:</b> {invoiceData.status}
+            </p>
+            <p>
+              <b>Total:</b> ₹{invoiceData.totalAmount}
+            </p>
+            <p>
+              <b>Address:</b> {invoiceData.address}
+            </p>
           </div>
         </div>
       )}

@@ -19,7 +19,7 @@ function AdminDashboard() {
   const ordersPerPage = 5;
 
   // ✅ FIXED BASE URL (IMPORTANT)
-  const API_BASE_URL = "http://localhost:8080/api";
+  const API_BASE_URL = "http://localhost:8080/api/admin";
 
   // Fetch orders
   useEffect(() => {
@@ -52,9 +52,7 @@ function AdminDashboard() {
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
       setOrders((prev) =>
-        prev.map((order) =>
-          order.id === id ? { ...order, status } : order
-        )
+        prev.map((order) => (order.id === id ? { ...order, status } : order)),
       );
     } catch (err) {
       console.error("Status update error:", err);
@@ -103,7 +101,7 @@ function AdminDashboard() {
 
   const totalRevenue = orders.reduce(
     (sum, order) => sum + (order.totalAmount || 0),
-    0
+    0,
   );
 
   // Pagination
@@ -134,9 +132,7 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">
-          Admin Orders Dashboard
-        </h1>
+        <h1 className="text-4xl font-bold mb-8">Admin Orders Dashboard</h1>
 
         {/* STATS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -162,9 +158,7 @@ function AdminDashboard() {
 
         {/* CHART */}
         <div className="bg-white p-6 rounded-xl shadow mb-10">
-          <h2 className="font-semibold mb-4">
-            Daily Orders & Revenue
-          </h2>
+          <h2 className="font-semibold mb-4">Daily Orders & Revenue</h2>
 
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
@@ -225,7 +219,9 @@ function AdminDashboard() {
                     ₹{order.totalAmount}
                   </td>
                   <td className="p-3">
-                    <span className={`px-3 py-1 rounded-full ${statusColor(order.status)}`}>
+                    <span
+                      className={`px-3 py-1 rounded-full ${statusColor(order.status)}`}
+                    >
                       {order.status}
                     </span>
                   </td>
@@ -234,9 +230,7 @@ function AdminDashboard() {
                     <select
                       value={order.status}
                       className="border p-2 rounded"
-                      onChange={(e) =>
-                        updateStatus(order.id, e.target.value)
-                      }
+                      onChange={(e) => updateStatus(order.id, e.target.value)}
                     >
                       <option value="PLACED">PLACED</option>
                       <option value="CONFIRMED">CONFIRMED</option>
@@ -258,9 +252,7 @@ function AdminDashboard() {
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
                 className={`px-4 py-2 rounded ${
-                  currentPage === i + 1
-                    ? "bg-blue-600 text-white"
-                    : "bg-white"
+                  currentPage === i + 1 ? "bg-blue-600 text-white" : "bg-white"
                 }`}
               >
                 {i + 1}
